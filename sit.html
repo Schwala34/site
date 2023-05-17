@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Форма для загрузки JSON-файла через SQL</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$("#load-form").submit(function(event){
+				event.preventDefault(); // Отменяем стандартное поведение отправки формы
+				var fileName = $("#file-name").val(); // Получаем имя файла из поля ввода
+				$.ajax({
+					url: "get_json.php", // Путь к PHP-скрипту
+					method: "POST", // Метод передачи данных
+					dataType: "json", // Ожидаемый формат данных - JSON
+					data: {file_name: fileName}, // Параметры запроса
+					success: function(data){ // Обработчик успешного завершения запроса
+						// Выводим данные из файла на страницу
+						$("#result").html("<pre>" + JSON.stringify(data, null, 2) + "</pre>");
+					},
+					error: function(xhr, status, error){ // Обработчик ошибок
+						alert("Ошибка при загрузке файла: " + error);
+					}
+				});
+			});
+		});
+	</script>
+</head>
+<body>
+	<h1>Форма для загрузки JSON-файла через SQL</h1>
+	<form id="load-form">
+		<label for="file-name">Введите имя файла без расширения:</label>
+		<input type="text" id="file-name" name="file-name" required>
+		<input type="submit" value="Загрузить">
+	</form>
+	<div id="result"></div>
+</body>
+</html>
